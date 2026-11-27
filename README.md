@@ -1,4 +1,4 @@
-# Club Deportivo Séneca – Proyecto 2, Entrega única
+# Club Deportivo Séneca – Proyecto 3, Entrega única
 
 ## Participantes
 
@@ -6,7 +6,7 @@
 2. Juan Jose Castro
 3. Tomas Rivera
 
-## Proyecto 2 – Consola del administrador
+## Proyecto 3 – Consola del administrador
 
 1. Abra `src/consola/ConsolaAdministrador.java`, clic derecho > **Run As > Java Application**.
 2. Entre con usuario `admin` y clave `admin123`. Si entra un socio o un empleado, el programa le avisa que use la consola de su rol y se cierra.
@@ -27,18 +27,18 @@ Clic derecho sobre cada archivo > **Run As > JUnit Test**. Ninguna escribe archi
 - `AdministracionTest`: 12 pruebas de inventario (reabastecer y mover) y de reportes (ventas con mensualidades, asistencia, resultados y ranking).
 - `ReservasPerfilTest`: 6 pruebas de reservas, de que el administrador no puede reservar y de la consulta del perfil.
 
-## Proyecto 2 – Inscripciones y participantes
+## Proyecto 3 – Inscripciones y participantes
 
 ### Cómo ejecutar
-1. Clic derecho sobre `ConsolaParticipante.java` o `ConsolaEmpleado.java` > **Run As > Java Application**.
-2. Los datos se cargan y se guardan solos en `datos/club.dat`. La primera vez se crean datos de ejemplo. Para empezar de cero, borre la carpeta `datos`.
+1. Abra `src/presentacion/VentanaParticipante.java`, clic derecho > **Run As > Java Application**.
+2. Los datos se cargan y se guardan solos en `datos/club.dat`. La primera vez se crean datos de ejemplo. Para empezar de cero, cierre la ventana y borre la carpeta `datos`.
+3. Para salir, cierre la ventana (se guardan los cambios)
 
 ### Usuarios de prueba (todos con clave `1234`)
-
-**Consola de participantes**
 - Socios: `sofia` y `juan` (tenis intermedio), `maria` y `pedro` (pádel avanzado).
 - Estudiante: `diana`.
-- Persona externa: `esteban`.
+- También puede crear un usuario nuevo con **Registrarme como estudiante** o **Registrarme como persona externa**.
+- El administrador y los empleados no entran por esta ventana.
 
 **Consola de empleados**
 - Entrenadores: `carlos` (responsable del equipo Halcones Sub-15) y `laura`.
@@ -48,34 +48,18 @@ También se pueden registrar nuevos estudiantes y personas externas desde el men
 
 Si alguien entra a una consola que no es de su rol, el programa se lo avisa. El login da 3 intentos y no dice cuál dato falló.
 
-### Cómo probar un torneo con la consola del asministrador
-1. En `ConsolaParticipante`, inscriba al menos dos socios en un torneo.
-2. En `ConsolaAdministrador`, asigne el entrenador responsable a un equipo (opción 4) si va a probar equipos.
-3. En `ConsolaAdministrador`, inicie el torneo, registre los resultados y finalícelo.
-4. Si el torneo es recreativo, vuelva a `ConsolaParticipante`: el ganador verá su bono en Compras > Mis bonos de descuento y podrá usarlo en la tienda o la cafetería.
+### Qué hace cada pestaña
+- **Torneos:** ver torneos, inscribirse, inscribir pareja (por el usuario de la pareja), retirarse y ver clasificación y resultados.
+- **Academias y reservas (solo socios):** inscribirse en una disciplina, reservar una instalación, programar una práctica y ver convocatorias.
+- **Compras (solo socios):** comprar en tienda o cafetería con propina, puntos de fidelidad, código de descuento o bono; ver bonos e historial
+- **Gráficas (solo socios):**
+  - Líneas: evolución del ELO por semanas. Filtros de disciplina y número de semanas
+  - Pastel: victorias, derrotas y empates. Filtros de disciplina y tipo (todas, prácticas o torneos)
+- **Perfil:** datos del usuario
 
+### Prueba rápida
+1. Entre como `sofia` > pestaña **Torneos** > elija "Copa Tenis…" > **Inscribirme**.
+2. En **Gráficas**, cambie la disciplina o las semanas y vea cómo cambia la línea.
 
 ### Pruebas JUnit
-Clic derecho sobre cada archivo de `src/pruebas` > **Run As > JUnit Test**:
-- `TorneoTest`: 10 pruebas unitarias (cupos preferenciales y reglas del torneo).
-- `InscripcionesTorneoTest`: 55 pruebas de integración, una o más por historia de usuario.
-- `BonosTest`: 9 pruebas (bono en tienda y cafetería, y academias).
-- `PersistenciaTorneosTest`: 1 prueba (guardar y volver a cargar). Escribe en una carpeta temporal.
-
-
-
-## Cómo ejecutar (anterior entrega)
-
-1. Descargue o clone el repositorio.
-2. En el proyecto, abra src > consola. Allí están los programas Prueba1 a Prueba10.
-3. Clic derecho sobre una prueba (por ejemplo Prueba1.java) > **Run As > Java Application**.
-4. La consola pregunta por la carpeta de datos. Pulse Enter para usar la predeterminada (datos/prueba1, datos/prueba2, etc.).
-5. Lea la salida. Cada escenario muestra un título y su resultado:
-   `[OK]`: la operación válida funcionó,
-   `[RECHAZADO esperado: motivo]`: la operación inválida fue rechazada por una regla de negocio,
-   `[ERROR]`: no se obtuvo el resultado esperado 
-
-   También se imprime el estado de los datos antes y después de los escenarios.
-7. Para comprobar la persistencia, ejecute la misma prueba por segunda vez. El programa dice "Se cargaron datos existentes" y muestra el estado que quedó guardado en `datos/pruebaN/club.dat`.
-8. Para repetir una prueba desde cero, borre su carpeta `datos/pruebaN` y vuelva a ejecutarla. 
-9. Repita los pasos 4 a 8 con las demás pruebas.
+Clic derecho sobre `src/pruebas/GraficasParticipanteTest.java` > **Run As > JUnit Test** (6 pruebas de los datos de las gráficas).

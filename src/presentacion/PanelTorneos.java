@@ -73,6 +73,10 @@ public class PanelTorneos extends JPanel {
 
     public void actualizar() {
         torneos = club.getTorneos();
+        int elegida = tablaTorneos.getSelectedRow();
+        if (elegida < 0) {
+            elegida = 0;
+        }
         List<Object[]> filas = new ArrayList<>();
         for (Torneo t : torneos) {
             InscripcionTorneo mia = t.buscarInscripcionDe(usuario);
@@ -82,6 +86,9 @@ public class PanelTorneos extends JPanel {
                     mia == null ? "-" : "Inscrito (" + mia.getTipoCupo() + ")" });
         }
         Estilo.llenar(tablaTorneos, filas);
+        if (elegida < torneos.size()) {
+            tablaTorneos.setRowSelectionInterval(elegida, elegida);
+        }
         mostrarInscritos();
     }
 
