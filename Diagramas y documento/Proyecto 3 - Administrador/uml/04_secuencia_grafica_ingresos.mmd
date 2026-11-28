@@ -1,0 +1,41 @@
+sequenceDiagram
+  actor Admin as Administrador
+  participant PG as PanelIngresos
+  participant C as Club
+  participant V as Venta (Tienda/Cafeteria)
+  participant S as Socio
+  participant D as IngresoDiario
+  participant G as GraficaBarras
+
+  Admin->>PG: cambia fecha "Desde", un rubro o la vista
+  PG->>PG: actualizar()
+  PG->>C: consultarIngresosNetos(codigoAdmin, inicio)
+  C->>C: exigirAdministrador(codigo)
+  loop 5 dias (DIAS_REPORTE_INGRESOS)
+    C->>D: new IngresoDiario(inicio + i)
+  end
+  loop cada venta del club
+    C->>V: getFecha()
+    alt fecha dentro del rango
+      C->>V: getIngresoNeto()
+      V->>V: total - getImpuestos()
+      C->>D: sumar(TIENDA o CAFETERIA, neto)
+    end
+  end
+  loop cada mensualidad de cada socio
+    C->>S: getMensualidades()
+    alt fechaPago dentro del rango
+      C->>D: sumar(MENSUALIDADES, valor)
+    end
+  end
+  C-->>PG: List<IngresoDiario>
+  PG->>PG: getRubrosSeleccionados()
+  alt vista por dia
+    PG->>PG: construirSeriesPorDia(dias, rubros)
+  else total del rango
+    PG->>PG: construirSeriesAcumuladas(dias, rubros)
+  end
+  PG->>G: setDatos(titulo, categorias, series)
+  G->>G: repaint() -> paintComponent(Java2D)
+  PG->>PG: llenarResumen(rubros)
+  G-->>Admin: barras + tooltip con el valor exacto

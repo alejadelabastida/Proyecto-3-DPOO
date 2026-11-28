@@ -1,0 +1,23 @@
+sequenceDiagram
+  actor U as Usuario
+  participant M as VentanaAdministrador.main
+  participant P as Persistencia
+  participant L as DialogoLogin
+  participant C as Club
+  participant V as VentanaAdministrador
+
+  M->>P: cargar()
+  P-->>M: club
+  M->>M: DatosTorneos / DatosAdministrador.cargarSiHaceFalta(club)
+  M->>L: pedir(club)
+  U->>L: usuario y clave + Ingresar
+  L->>C: iniciarSesion(login, clave)
+  alt es Administrador
+    L-->>M: administrador
+    M->>V: new VentanaAdministrador(club, administrador)
+    V->>V: construir() y mostrar(INICIO)
+  else es otro rol
+    L-->>U: aviso y se cierra
+  else credenciales invalidas
+    L-->>U: "Intento n de 3" (al tercero se cierra)
+  end

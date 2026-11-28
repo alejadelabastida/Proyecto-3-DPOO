@@ -1,0 +1,51 @@
+flowchart LR
+  subgraph UI["Interfaz Swing del administrador (interfaz.administrador)"]
+    L[DialogoLogin]
+    V[VentanaAdministrador<br/>menu lateral + CardLayout]
+    PI[PanelInicio]
+    PT[PanelTorneos]
+    PE[PanelEquipos]
+    PS[PanelInstalaciones]
+    PV[PanelInventario]
+    PU[PanelTurnos]
+    PC[PanelCompetencias]
+    PR[PanelReportes]
+    PG[PanelIngresos]
+    G[GraficaBarras<br/>interfaz.graficas]
+  end
+  subgraph DOM["Dominio (modelo)"]
+    C((Club<br/>fachada))
+    A[Administrador]
+    T[Torneo / EncuentroTorneo /<br/>InscripcionTorneo]
+    E[Equipo / Jugador / Entrenador]
+    I[Instalacion]
+    INV[UbicacionInventario /<br/>ExistenciaInventario / Producto]
+    SG[SugerenciaProducto]
+    TU[Turno / SolicitudCambioTurno]
+    CO[Competencia / InscripcionEquipo]
+    VE[Venta / Mensualidad]
+    ID[IngresoDiario / RubroIngreso]
+  end
+  P[(Persistencia<br/>datos/club.dat)]
+
+  L -- iniciarSesion --> C
+  L -- entrega --> A
+  V --> PI & PT & PE & PS & PV & PU & PC & PR & PG
+  PI -- consultas de resumen --> C
+  PT -- crear/iniciar/registrarResultado/finalizarTorneo --> C
+  PT -. lee .-> T
+  PE -- crearEquipo/inscribirJugador/asignarEntrenadorAEquipo/darDeBaja --> C
+  PE -. lee .-> E
+  PS -. disponible .-> I
+  PV -- reabastecer/moverArticulo/aprobar o rechazarSugerencia --> C
+  PV -. lee .-> INV & SG
+  PU -- consultarTurnos/aprobarCambio/rechazarCambio --> C
+  PU -. lee .-> TU
+  PC -- agregarCompetencia/inscribirEquipo/consultarTablaPosiciones --> C
+  PC -. lee .-> CO
+  PR -- reporteVentas/Asistencia/Resultados/Ranking/historiales --> C
+  PG -- consultarIngresosNetos --> C
+  C --> ID
+  ID -. calcula con .-> VE
+  PG --> G
+  C -- guardar --> P

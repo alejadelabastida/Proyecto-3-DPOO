@@ -1,0 +1,29 @@
+sequenceDiagram
+  actor Admin as Administrador
+  participant PT as PanelTorneos
+  participant F as Formulario
+  participant C as Club
+  participant T as Torneo
+  participant E as EncuentroTorneo
+
+  Admin->>PT: selecciona torneo y pulsa "Registrar resultado"
+  PT->>PT: ejecutar(accion)
+  PT->>PT: exigirSeleccion()
+  PT->>T: getEncuentros()
+  PT->>PT: filtra los no jugados
+  alt no hay pendientes
+    PT-->>Admin: Estilo.error("El torneo no tiene encuentros pendientes")
+  else hay pendientes
+    PT->>F: agregar(encuentro, marcadorLocal, marcadorVisitante)
+    PT->>F: mostrar(padre, titulo, alAceptar)
+    F-->>Admin: dialogo modal
+    Admin->>F: OK
+    F->>C: registrarResultado(codigoAdmin, torneo, encuentro, ml, mv)
+    C->>C: exigirAdministrador / torneo EN_CURSO
+    C->>E: registrarResultado(ml, mv)
+    C->>C: guardar()
+    alt ReglaNegocioException
+      F-->>Admin: muestra el error y vuelve a abrir el dialogo
+    end
+  end
+  PT->>PT: actualizar() (tabla, encuentros, clasificacion, historial)

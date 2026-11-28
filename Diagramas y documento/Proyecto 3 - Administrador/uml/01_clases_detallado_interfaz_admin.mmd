@@ -1,0 +1,354 @@
+classDiagram
+direction LR
+
+class JFrame {
+  <<Swing>>
+}
+class JPanel {
+  <<Swing>>
+}
+class JDialog {
+  <<Swing>>
+}
+class JComponent {
+  <<Swing>>
+}
+class JSpinner {
+  <<Swing>>
+}
+
+class Actualizable {
+  <<interface>>
+  +actualizar() void
+}
+
+class VentanaAdministrador {
+  +CARPETA_DATOS : String
+  +INICIO, TORNEOS, EQUIPOS, INSTALACIONES : String
+  +INVENTARIO, TURNOS, COMPETENCIAS, REPORTES, INGRESOS : String
+  -club : Club
+  -administrador : Administrador
+  -tarjetas : CardLayout
+  -contenido : JPanel
+  -menu : JPanel
+  -grupoMenu : ButtonGroup
+  -secciones : Map~String, PanelBase~
+  -botonesMenu : Map~String, JToggleButton~
+  -seccionActual : String
+  +VentanaAdministrador(club, administrador)
+  +main(args)$ void
+  +configurarApariencia()$ void
+  +iniciarSesion(club)$ void
+  +mostrar(nombre) void
+  +getSeccionActual() String
+  +getSeccion(nombre) PanelBase
+  -construir() void
+  -crearEncabezado() JPanel
+  -agregarSeccion(nombre, panel) void
+  -cerrarSesion() void
+  -salir() void
+}
+
+class DialogoLogin {
+  +INTENTOS_PERMITIDOS : int
+  -club : Club
+  -campoUsuario : JTextField
+  -campoClave : JPasswordField
+  -mensaje : JLabel
+  -intentosFallidos : int
+  -administrador : Administrador
+  +DialogoLogin(club)
+  +pedir(club)$ Administrador
+  +getAdministrador() Administrador
+  +getIntentosFallidos() int
+  -construir() void
+  -intentarIngreso() void
+}
+
+class PanelBase {
+  <<abstract>>
+  #club : Club
+  #administrador : Administrador
+  #PanelBase(club, administrador, titulo, descripcion)
+  #ejecutar(accion : Runnable) boolean
+  #codigoAdministrador() int
+  +actualizar()* void
+}
+
+class PanelInicio {
+  -navegar : Consumer~String~
+  -tarjetas : JPanel
+  -pendientes : DefaultListModel~String~
+  +actualizar() void
+  -agregarTarjeta(nombre, valor, seccion) void
+}
+
+class PanelTorneos {
+  -filtroEstado : JComboBox
+  -modeloTorneos : DefaultTableModel
+  -tablaTorneos : JTable
+  -modeloInscritos : DefaultTableModel
+  -modeloEncuentros : DefaultTableModel
+  -modeloPosiciones : DefaultTableModel
+  -historial : JTextArea
+  -resumenCupos : JLabel
+  -torneosVisibles : List~Torneo~
+  +actualizar() void
+  +getTorneoSeleccionado() Torneo
+  +seleccionar(torneo) void
+  -mostrarDetalle() void
+  -crearTorneo() void
+  -iniciarTorneo() void
+  -registrarResultado() void
+  -finalizarTorneo() void
+}
+
+class PanelEquipos {
+  -modeloEquipos : DefaultTableModel
+  -tablaEquipos : JTable
+  -modeloJugadores : DefaultTableModel
+  -tablaJugadores : JTable
+  -equiposVisibles : List~Equipo~
+  -jugadoresVisibles : List~Jugador~
+  +actualizar() void
+  +getEquipoSeleccionado() Equipo
+  -crearEquipo() void
+  -asignarEntrenador() void
+  -inscribirSocio() void
+  -darDeBajaJugador() void
+  -darDeBajaEquipo() void
+}
+
+class PanelInstalaciones {
+  -modelo : DefaultTableModel
+  -filtroDisciplina : JComboBox
+  -revisarDisponibilidad : JCheckBox
+  -fecha : CampoFecha
+  -hora : CampoHora
+  -duracion : JSpinner
+  +actualizar() void
+}
+
+class PanelInventario {
+  -filtroUbicacion : JComboBox
+  -modeloInventario : DefaultTableModel
+  -soloPendientes : JCheckBox
+  -modeloSugerencias : DefaultTableModel
+  -tablaSugerencias : JTable
+  -sugerenciasVisibles : List~SugerenciaProducto~
+  +actualizar() void
+  -mostrarInventario() void
+  -mostrarSugerencias() void
+  -reabastecer() void
+  -mover() void
+  -evaluar(aprobar) void
+}
+
+class PanelTurnos {
+  -modeloTurnos : DefaultTableModel
+  -modeloSolicitudes : DefaultTableModel
+  -tablaSolicitudes : JTable
+  -soloPendientes : JCheckBox
+  -solicitudesVisibles : List~SolicitudCambioTurno~
+  +actualizar() void
+  -aprobar() void
+  -rechazar() void
+}
+
+class PanelCompetencias {
+  -modeloCompetencias : DefaultTableModel
+  -tablaCompetencias : JTable
+  -modeloTabla : DefaultTableModel
+  -visibles : List~Competencia~
+  +actualizar() void
+  -mostrarTabla() void
+  -registrar() void
+  -inscribirEquipo() void
+}
+
+class PanelReportes {
+  -tipo : JComboBox~TipoReporte~
+  -deporte : JComboBox~Deporte~
+  -desde : CampoFecha
+  -hasta : CampoFecha
+  -resultado : JTextArea
+  +actualizar() void
+  +generar() void
+  +consultar(reporte, inicio, fin) List~String~
+  +configurar(reporte, inicio, fin) void
+}
+
+class TipoReporte {
+  <<enumeration>>
+  VENTAS
+  ASISTENCIA
+  RESULTADOS
+  RANKING
+  RESERVAS
+  PARTIDOS
+  SESIONES
+}
+
+class PanelIngresos {
+  -inicio : CampoFecha
+  -filtrosRubro : Map~RubroIngreso, JCheckBox~
+  -porDia : JRadioButton
+  -acumulado : JRadioButton
+  -grafica : GraficaBarras
+  -modeloResumen : DefaultTableModel
+  -totalRango : JLabel
+  -ultimoResultado : List~IngresoDiario~
+  +actualizar() void
+  +categoriasPorDia(dias)$ List~String~
+  +construirSeriesPorDia(dias, rubros)$ List~SerieGrafica~
+  +construirSeriesAcumuladas(dias, rubros)$ List~SerieGrafica~
+  +colorDe(rubro)$ Color
+  +getRubrosSeleccionados() Set~RubroIngreso~
+  +getGrafica() GraficaBarras
+  +setInicio(fecha) void
+  +setRubroVisible(rubro, visible) void
+  +setVistaAcumulada(acumulada) void
+  -llenarResumen(rubros) void
+}
+
+class GraficaBarras {
+  -titulo : String
+  -mensajeVacio : String
+  -categorias : List~String~
+  -series : List~SerieGrafica~
+  -formatoValores : DoubleFunction~String~
+  -formatoEje : DoubleFunction~String~
+  -zonas : List~Rectangle2D~
+  -descripciones : List~String~
+  +setDatos(titulo, categorias, series) void
+  +setFormatos(valores, eje) void
+  +setMensajeVacio(mensaje) void
+  +estaVacia() boolean
+  +getToolTipText(evento) String
+  #paintComponent(g) void
+  -dibujarEjes(g2, ancho, alto, tope, conValores) void
+  -dibujarBarras(g2, ancho, alto, tope) void
+  -redondearTope(maximo)$ double
+}
+
+class SerieGrafica {
+  -nombre : String
+  -color : Color
+  -valores : double[]
+  +getNombre() String
+  +getColor() Color
+  +getCantidad() int
+  +getValor(indice) double
+  +getMaximo() double
+}
+
+class Formulario {
+  -panel : JPanel
+  -fila : int
+  +agregar(etiqueta, campo) Formulario
+  +agregarCompleto(componente) Formulario
+  +mostrar(padre, titulo, alAceptar) boolean
+}
+
+class CampoFecha {
+  +getFecha() LocalDate
+  +setFecha(fecha) void
+}
+
+class CampoHora {
+  +getHora() LocalTime
+}
+
+class Estilo {
+  <<utility>>
+  +AZUL, COLOR_TIENDA, COLOR_CAFETERIA, COLOR_MENSUALIDADES : Color
+  +dinero(valor)$ String
+  +dineroCorto(valor)$ String
+  +titulo(texto)$ JLabel
+  +boton(texto, accion)$ JButton
+  +modeloTabla(columnas)$ DefaultTableModel
+  +tabla(modelo)$ JTable
+  +error(padre, mensaje)$ void
+  +confirmar(padre, mensaje)$ boolean
+}
+
+class DatosAdministrador {
+  <<utility>>
+  +VALOR_MENSUALIDAD : double
+  +cargarSiHaceFalta(club)$ void
+  +cargarVentasYMensualidades(club, hoy)$ void
+}
+
+class Club {
+  +DIAS_REPORTE_INGRESOS : int
+  +consultarIngresosNetos(codigoAdmin, inicio) List~IngresoDiario~
+  -buscarDia(dias, fecha) IngresoDiario
+}
+class IngresoDiario {
+  -fecha : LocalDate
+  -valores : Map~RubroIngreso, Double~
+  +sumar(rubro, valor) void
+  +getValor(rubro) double
+  +getTotal() double
+  +getFecha() LocalDate
+}
+class RubroIngreso {
+  <<enumeration>>
+  TIENDA
+  CAFETERIA
+  MENSUALIDADES
+  -etiqueta : String
+  +getEtiqueta() String
+}
+class Venta {
+  <<abstract>>
+  +getImpuestos()* double
+  +getIngresoNeto() double
+  +setFecha(fecha) void
+}
+class VentaTienda {
+  +getImpuestos() double
+}
+class VentaCafeteria {
+  +getImpuestos() double
+}
+
+JFrame <|-- VentanaAdministrador
+JDialog <|-- DialogoLogin
+JPanel <|-- PanelBase
+Actualizable <|.. PanelBase
+PanelBase <|-- PanelInicio
+PanelBase <|-- PanelTorneos
+PanelBase <|-- PanelEquipos
+PanelBase <|-- PanelInstalaciones
+PanelBase <|-- PanelInventario
+PanelBase <|-- PanelTurnos
+PanelBase <|-- PanelCompetencias
+PanelBase <|-- PanelReportes
+PanelBase <|-- PanelIngresos
+JComponent <|-- GraficaBarras
+JSpinner <|-- CampoFecha
+JSpinner <|-- CampoHora
+PanelReportes *-- TipoReporte : clase interna
+VentanaAdministrador "1" *-- "9" PanelBase : secciones
+VentanaAdministrador ..> DialogoLogin : abre
+VentanaAdministrador ..> DatosAdministrador : usa
+PanelIngresos "1" *-- "1" GraficaBarras
+GraficaBarras "1" o-- "*" SerieGrafica
+PanelIngresos ..> IngresoDiario
+PanelIngresos ..> RubroIngreso
+PanelTorneos ..> Formulario
+PanelEquipos ..> Formulario
+PanelInventario ..> Formulario
+PanelTurnos ..> Formulario
+PanelCompetencias ..> Formulario
+PanelReportes *-- CampoFecha
+PanelInstalaciones *-- CampoHora
+PanelBase --> Club
+VentanaAdministrador --> Club
+DialogoLogin --> Club
+Club ..> IngresoDiario : crea
+IngresoDiario --> RubroIngreso
+Venta <|-- VentaTienda
+Venta <|-- VentaCafeteria
+Club "1" o-- "*" Venta
