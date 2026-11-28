@@ -60,6 +60,11 @@ public class VentaCafeteria extends Venta {
                 + impuestoConsumo + propina;
     }
 
+    @Override
+    public double getImpuestos() {
+        return impuestoConsumo;
+    }
+
     public double getImpuestoConsumo() {
         return impuestoConsumo;
     }

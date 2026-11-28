@@ -1645,6 +1645,46 @@ public VentaCafeteria comprarCafeteria(
         return sinVacio(lineas);
     }
 
+    public static final int DIAS_REPORTE_INGRESOS = 5;
+
+    public List<IngresoDiario> consultarIngresosNetos(int codigoAdministrador, LocalDate inicio) {
+        exigirAdministrador(codigoAdministrador, "consultar los ingresos del club");
+        if (inicio == null) {
+            throw new ReglaNegocioException("Debe indicar la fecha inicial del rango");
+        }
+        List<IngresoDiario> dias = new ArrayList<>();
+        for (int i = 0; i < DIAS_REPORTE_INGRESOS; i++) {
+            dias.add(new IngresoDiario(inicio.plusDays(i)));
+        }
+        for (Venta v : ventas) {
+            IngresoDiario dia = buscarDia(dias, v.getFecha().toLocalDate());
+            if (dia != null) {
+                RubroIngreso rubro = (v instanceof VentaTienda) ? RubroIngreso.TIENDA : RubroIngreso.CAFETERIA;
+                dia.sumar(rubro, v.getIngresoNeto());
+            }
+        }
+        for (Usuario u : usuarios) {
+            if (u instanceof Socio) {
+                for (Mensualidad m : ((Socio) u).getMensualidades()) {
+                    IngresoDiario dia = buscarDia(dias, m.getFechaPago());
+                    if (dia != null) {
+                        dia.sumar(RubroIngreso.MENSUALIDADES, m.getValor());
+                    }
+                }
+            }
+        }
+        return dias;
+    }
+
+    private IngresoDiario buscarDia(List<IngresoDiario> dias, LocalDate fecha) {
+        for (IngresoDiario dia : dias) {
+            if (dia.getFecha().equals(fecha)) {
+                return dia;
+            }
+        }
+        return null;
+    }
+
     //  PERSONA 2: entrenamientos
 
     public SesionEntrenamiento organizarSesion(int codigoEntrenador, Instalacion instalacion,

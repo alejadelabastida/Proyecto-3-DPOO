@@ -6,6 +6,18 @@
 2. Juan Jose Castro
 3. Tomas Rivera
 
+## Proyecto 3 – Interfaz gráfica del administrador (Persona 1)
+
+1. Abra `src/interfaz/administrador/VentanaAdministrador.java`, clic derecho > **Run As > Java Application**.
+2. Entre con usuario `admin` y clave `admin123` (3 intentos; si entra otro rol, se le avisa y se cierra).
+3. El menú lateral tiene: Inicio (resumen y pendientes), Torneos, Equipos y jugadores, Instalaciones, Inventario y sugerencias, Turnos del personal, Competencias oficiales, Consultas y reportes y **Gráfica de ingresos**.
+4. La gráfica de barras compara tienda, cafetería y mensualidades en 5 días, sin IVA ni impuesto al consumo. Filtros: fecha inicial, rubros y vista por día o total del rango.
+5. Usa los mismos datos de `datos/club.dat`. La primera vez se agregan ventas, mensualidades, sugerencias y solicitudes de turno de ejemplo (`DatosAdministrador`), solo si no existen.
+
+Pruebas nuevas (JUnit 5): `IngresosNetosTest` e `InterfazAdministradorTest`.
+
+Documento de diseño, bocetos, diagramas UML (fuentes `.mmd`) y capturas: `Diagramas y documento/Proyecto 3 - Administrador/`.
+
 ## Proyecto 3 – Consola del administrador
 
 1. Abra `src/consola/ConsolaAdministrador.java`, clic derecho > **Run As > Java Application**.

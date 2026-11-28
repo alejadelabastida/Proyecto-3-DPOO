@@ -24,6 +24,9 @@ public class VentaTienda extends Venta {
         return subtotal - descuento + iva;
     }
 
+    @Override
+    public double getImpuestos() { return iva; }
+
     public double getIva() { return iva; }
     public double getDescuento() { return descuento; }
     public String getCodigoDescuentoUsado() { return codigoDescuentoUsado; }

@@ -35,6 +35,16 @@ public abstract class Venta implements Serializable{
 
     public abstract double calcularTotal();
 
+    public abstract double getImpuestos();
+
+    public double getIngresoNeto() {
+        return redondear(total - getImpuestos());
+    }
+
+    public void setFecha(LocalDateTime fecha) {
+        this.fecha = fecha;
+    }
+
     protected void terminar() {
         total = redondear(calcularTotal());
         puntosGanados = (int) (total * PORCENTAJE_PUNTOS);
